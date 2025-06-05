@@ -5,71 +5,55 @@ import type {DfDataConnection} from '../../ng-draw-flow.interfaces';
 
 @Injectable()
 export class ConnectionsService {
-    public readonly connections$ = new BehaviorSubject<DfDataConnection[]>([]);
-    public readonly usedConnectors$ = new BehaviorSubject<string[]>([]);
+    public readonly connections$ = new BehaviorSubject<Map<string, DfDataConnection>>(
+        new Map(),
+    );
+
+    public readonly usedConnectors$ = new BehaviorSubject<Set<string>>(new Set());
 
     public addConnections(connections: DfDataConnection[]): void {
-        const newConnections = connections.filter(
-            (newConnection) =>
-                !this.connections$.value.some((existingConnection) =>
-                    this.areConnectionsEqual(existingConnection, newConnection),
-                ),
-        );
-
-        if (newConnections.length === 0) {
+        if (connections.length === 0) {
             return;
         }
 
-        const updatedUsedConnectors = [...this.usedConnectors$.value];
+        const updatedMap = new Map(this.connections$.value);
 
-        newConnections.forEach((connection) => {
-            if (!updatedUsedConnectors.includes(connection.source.connectorId)) {
-                updatedUsedConnectors.push(connection.source.connectorId);
-            }
+        connections.forEach((connection) => {
+            const key = this.createKey(connection);
 
-            if (!updatedUsedConnectors.includes(connection.target.connectorId)) {
-                updatedUsedConnectors.push(connection.target.connectorId);
+            if (!updatedMap.has(key)) {
+                updatedMap.set(key, connection);
             }
         });
 
-        this.usedConnectors$.next(updatedUsedConnectors);
-        this.connections$.next([...this.connections$.value, ...newConnections]);
+        this.connections$.next(updatedMap);
+        this.usedConnectors$.next(this.collectUsedConnectors(updatedMap));
     }
 
     public removeConnection(connectionToRemove: DfDataConnection): void {
-        const filteredConnections = this.connections$.value.filter(
-            (existingConnection) =>
-                !this.areConnectionsEqual(existingConnection, connectionToRemove),
-        );
+        const keyToRemove = this.createKey(connectionToRemove);
 
-        const usedConnectors = this.usedConnectors$.value.filter((connectorId: string) =>
-            filteredConnections.some(
-                (connection) =>
-                    connection.source.connectorId === connectorId ||
-                    connection.target.connectorId === connectorId,
-            ),
-        );
+        const updatedMap = new Map(this.connections$.value);
 
-        this.usedConnectors$.next(usedConnectors);
-        this.connections$.next(filteredConnections);
+        if (!updatedMap.delete(keyToRemove)) {
+            return;
+        }
+
+        this.connections$.next(updatedMap);
+        this.usedConnectors$.next(this.collectUsedConnectors(updatedMap));
     }
 
     public removeConnectionsByNodeId(id: string): void {
-        const connectionsToKeep = this.connections$.value.filter(
-            (connection) =>
-                connection.source.nodeId !== id && connection.target.nodeId !== id,
-        );
+        const updatedMap = new Map(this.connections$.value);
 
-        const usedConnectors = this.usedConnectors$.value.filter((connectorId: string) =>
-            connectionsToKeep.some(
-                (connection) =>
-                    connection.source.connectorId === connectorId ||
-                    connection.target.connectorId === connectorId,
-            ),
-        );
+        for (const [key, connection] of this.connections$.value.entries()) {
+            if (connection.source.nodeId === id || connection.target.nodeId === id) {
+                updatedMap.delete(key);
+            }
+        }
 
-        this.usedConnectors$.next(usedConnectors);
-        this.connections$.next(connectionsToKeep);
+        this.connections$.next(updatedMap);
+        this.usedConnectors$.next(this.collectUsedConnectors(updatedMap));
     }
 
     public removeConnectionsByConnectorId(connectorIdToRemove: string): void {
@@ -77,31 +61,37 @@ export class ConnectionsService {
             return;
         }
 
-        const connectionsToKeep = this.connections$.value.filter(
-            (connection) =>
-                connection.source.connectorId !== connectorIdToRemove &&
-                connection.target.connectorId !== connectorIdToRemove,
-        );
+        const updatedMap = new Map(this.connections$.value);
 
-        const usedConnectors = this.usedConnectors$.value.filter(
-            (connectorId) => connectorId !== connectorIdToRemove,
-        );
+        for (const [key, connection] of this.connections$.value.entries()) {
+            if (
+                connection.source.connectorId === connectorIdToRemove ||
+                connection.target.connectorId === connectorIdToRemove
+            ) {
+                updatedMap.delete(key);
+            }
+        }
+
+        const usedConnectors = this.collectUsedConnectors(updatedMap);
+
+        usedConnectors.delete(connectorIdToRemove);
 
         this.usedConnectors$.next(usedConnectors);
-        this.connections$.next(connectionsToKeep);
+        this.connections$.next(updatedMap);
     }
 
-    private areConnectionsEqual(
-        connection1: DfDataConnection,
-        connection2: DfDataConnection,
-    ): boolean {
-        return (
-            connection1.source.nodeId === connection2.source.nodeId &&
-            connection1.source.connectorType === connection2.source.connectorType &&
-            connection1.source.connectorId === connection2.source.connectorId &&
-            connection1.target.nodeId === connection2.target.nodeId &&
-            connection1.target.connectorType === connection2.target.connectorType &&
-            connection1.target.connectorId === connection2.target.connectorId
-        );
+    private createKey(connection: DfDataConnection): string {
+        return `${connection.source.nodeId}:${connection.source.connectorId}->${connection.target.nodeId}:${connection.target.connectorId}`;
+    }
+
+    private collectUsedConnectors(map: Map<string, DfDataConnection>): Set<string> {
+        const used = new Set<string>();
+
+        map.forEach((conn) => {
+            used.add(conn.source.connectorId);
+            used.add(conn.target.connectorId);
+        });
+
+        return used;
     }
 }

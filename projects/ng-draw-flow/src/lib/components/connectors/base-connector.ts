@@ -44,8 +44,8 @@ export abstract class BaseConnector {
             filter(() => !!this.data?.connectorId),
             takeUntilDestroyed(),
         )
-        .subscribe((usedConnectorIds: string[]) => {
-            this.setupDisabledState(usedConnectorIds.includes(this.data.connectorId));
+        .subscribe((usedConnectorIds: Set<string>) => {
+            this.setupDisabledState(usedConnectorIds.has(this.data.connectorId));
         });
 
     protected setupDisabledState(connected: boolean): void {

@@ -13,7 +13,7 @@ import {
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 import type {ControlValueAccessor} from '@angular/forms';
 import {NG_VALUE_ACCESSOR} from '@angular/forms';
-import {filter} from 'rxjs';
+import {filter, map} from 'rxjs';
 
 import type {
     DfDataConnection,
@@ -161,6 +161,7 @@ export class SceneComponent implements ControlValueAccessor, OnInit {
     private initializeConnectionsSubscription(): void {
         this.connectionsService.connections$
             .pipe(
+                map((connectionsMap) => Array.from(connectionsMap.values())),
                 filter(() => !!this.model),
                 takeUntilDestroyed(this.destroyRef),
             )
@@ -171,7 +172,7 @@ export class SceneComponent implements ControlValueAccessor, OnInit {
     }
 
     private emitConnectionDeletedByNodeId(nodeId: string): void {
-        this.connectionsService.connections$.value
+        Array.from(this.connectionsService.connections$.value.values())
             .filter(
                 (connection) =>
                     connection.source.nodeId === nodeId ||
