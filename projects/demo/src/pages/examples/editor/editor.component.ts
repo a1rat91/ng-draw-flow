@@ -59,6 +59,12 @@ import {SimpleNodeComponent} from '../../../app/modules/nodes';
             nodes: {
                 simpleNode: SimpleNodeComponent,
             },
+            options: {
+                nodesDraggable: false,
+                nodesDeletable: false,
+                connectionsDeletable: false,
+                connectionsCreatable: false,
+            },
         }),
     ],
 })

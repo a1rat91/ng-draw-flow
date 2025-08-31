@@ -13,6 +13,10 @@ export const DRAW_FLOW_DEFAULT_OPTIONS: DfOptions = {
     nodes: {},
     options: {
         nodeDragThreshold: 1,
+        nodesDraggable: true,
+        nodesDeletable: true,
+        connectionsDeletable: true,
+        connectionsCreatable: true,
     },
 };
 
@@ -24,8 +28,18 @@ export function provideNgDrawFlowConfigs(options: Partial<DfOptions>): FactoryPr
     return {
         provide: DRAW_FLOW_OPTIONS,
         useFactory: (): DfOptions => ({
-            ...DRAW_FLOW_DEFAULT_OPTIONS,
-            ...options,
+            connection: {
+                ...DRAW_FLOW_DEFAULT_OPTIONS.connection,
+                ...options.connection,
+            },
+            nodes: {
+                ...DRAW_FLOW_DEFAULT_OPTIONS.nodes,
+                ...options.nodes,
+            },
+            options: {
+                ...DRAW_FLOW_DEFAULT_OPTIONS.options,
+                ...options.options,
+            },
         }),
     };
 }
