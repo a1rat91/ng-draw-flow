@@ -55,6 +55,11 @@ export class ConnectionComponent {
     private readonly options = inject(DRAW_FLOW_OPTIONS);
     protected selected = false;
 
+    protected readonly markerEnd =
+        this.options.connection.arrowhead === 'triangle'
+            ? 'url(#df-arrowhead-triangle)'
+            : null;
+
     @Input()
     public connection!: DfDataConnection;
 

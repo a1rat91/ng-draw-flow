@@ -53,7 +53,7 @@ import {SimpleNodeComponent} from '../../../app/modules/nodes';
         provideNgDrawFlowConfigs({
             connection: {
                 type: DfConnectionType.SmoothStep,
-                arrowhead: 'none',
+                arrowhead: 'triangle',
                 curvature: 10,
             },
             nodes: {

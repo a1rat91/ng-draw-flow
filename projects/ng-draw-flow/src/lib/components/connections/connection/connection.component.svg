@@ -1,4 +1,29 @@
 <svg class="connection" [class.optimize-speed]="optimization$ | async">
-    <path class="selectable-area" [attr.d]="path$ | async" (dfSelectableElement)="onSelectedChanged($event)" />
-    <path class="main-path" [attr.d]="path$ | async" [class.df-selected]="selected" />
+    <defs>
+        <marker
+            id="df-arrowhead-triangle"
+            viewBox="-10 -10 20 20"
+            refX="0"
+            refY="0"
+            markerWidth="12.5"
+            markerHeight="12.5"
+            orient="auto-start-reverse"
+            markerUnits="strokeWidth"
+        >
+            <polyline
+                points="-5,-4 0,0 -5,4 -5,-4"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                fill="context-stroke"
+                stroke="context-stroke"
+            />
+        </marker>
+    </defs>
+    <path
+        class="selectable-area"
+        [attr.d]="path$ | async"
+        (dfSelectableElement)="onSelectedChanged($event)"
+        [attr.marker-end]="markerEnd"
+    />
+    <path class="main-path" [attr.d]="path$ | async" [class.df-selected]="selected" [attr.marker-end]="markerEnd" />
 </svg>
