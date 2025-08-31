@@ -21,16 +21,24 @@ export interface DfConnectionOptions {
     curvature: number;
 }
 
+export interface DfWorkspaceOptions {
+    nodeDragThreshold: number;
+    nodesDraggable: boolean;
+    nodesDeletable: boolean;
+    connectionsDeletable: boolean;
+    connectionsCreatable: boolean;
+}
+
 export interface DfOptions {
     connection: DfConnectionOptions;
     nodes: DfComponents;
-    options: Partial<{
-        nodeDragThreshold: number;
-        nodesDraggable: boolean;
-        nodesDeletable: boolean;
-        connectionsDeletable: boolean;
-        connectionsCreatable: boolean;
-    }>;
+    options: DfWorkspaceOptions;
+}
+
+export interface DfOptionsInput {
+    connection?: Partial<DfConnectionOptions>;
+    nodes?: DfComponents;
+    options?: Partial<DfWorkspaceOptions>;
 }
 
 export type DfComponents = Record<string, Type<DrawFlowBaseNode>>;

@@ -185,8 +185,8 @@ export class NodeComponent implements AfterViewInit, OnChanges {
         this.accumulatedDelta.x += distance.deltaX / zoom;
         this.accumulatedDelta.y += distance.deltaY / zoom;
 
-        const applyX = Math.abs(this.accumulatedDelta.x) >= this.nodeDragThreshold!;
-        const applyY = Math.abs(this.accumulatedDelta.y) >= this.nodeDragThreshold!;
+        const applyX = Math.abs(this.accumulatedDelta.x) >= this.nodeDragThreshold;
+        const applyY = Math.abs(this.accumulatedDelta.y) >= this.nodeDragThreshold;
 
         if (applyX || applyY) {
             // Apply accumulated offset

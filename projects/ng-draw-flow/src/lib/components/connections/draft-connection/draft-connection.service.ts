@@ -66,7 +66,7 @@ export class DraftConnectionService implements OnDestroy {
 
         this.connection$
             .pipe(
-                filter(() => this.options.options.connectionsCreatable!),
+                filter(() => this.options.options.connectionsCreatable),
                 tap((connectorData: DfDataConnector) => this.onDragStart(connectorData)),
                 switchMap(() => fromEvent<PointerEvent>(document, 'pointermove')),
                 filter(() => this.isConnectionCreating$.value),

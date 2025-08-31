@@ -1,7 +1,7 @@
 import type {FactoryProvider} from '@angular/core';
 import {InjectionToken} from '@angular/core';
 
-import type {DfOptions} from './ng-draw-flow.interfaces';
+import type {DfOptions, DfOptionsInput} from './ng-draw-flow.interfaces';
 import {DfConnectionType} from './ng-draw-flow.interfaces';
 
 export const DRAW_FLOW_DEFAULT_OPTIONS: DfOptions = {
@@ -24,7 +24,7 @@ export const DRAW_FLOW_OPTIONS = new InjectionToken('[DRAW_FLOW_OPTIONS]: Option
     factory: () => DRAW_FLOW_DEFAULT_OPTIONS,
 });
 
-export function provideNgDrawFlowConfigs(options: Partial<DfOptions>): FactoryProvider {
+export function provideNgDrawFlowConfigs(options: DfOptionsInput = {}): FactoryProvider {
     return {
         provide: DRAW_FLOW_OPTIONS,
         useFactory: (): DfOptions => ({
