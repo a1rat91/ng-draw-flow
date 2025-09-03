@@ -35,7 +35,7 @@ describe('createSmoothStepPath', () => {
         const source = asConnector(point(0, 0), DfConnectorPosition.Right);
         const target = asConnector(point(100, 0), DfConnectorPosition.Left);
 
-        const d = createSmoothStepPath(source, target);
+        const [d] = createSmoothStepPath(source, target);
 
         expect(d).toBe('M0 0L100 0');
         expect(bend).not.toHaveBeenCalled();
@@ -55,7 +55,7 @@ describe('createSmoothStepPath', () => {
         const source = asConnector(point(0, 0), DfConnectorPosition.Right);
         const target = asConnector(point(50, 100), DfConnectorPosition.Left);
 
-        const d = createSmoothStepPath(source, target);
+        const [d] = createSmoothStepPath(source, target);
 
         // M … Qstub L …
         expect(d).toBe('M0 0QstubL50 100');

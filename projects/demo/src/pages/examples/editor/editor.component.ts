@@ -110,6 +110,7 @@ export default class EditorComponent implements OnInit {
                     connectorType: DfConnectionPoint.Input,
                     connectorId: 'node-2-input-1',
                 },
+                label: 'Label 1',
             },
             {
                 source: {
@@ -122,6 +123,7 @@ export default class EditorComponent implements OnInit {
                     connectorType: DfConnectionPoint.Input,
                     connectorId: 'node-3-input-1',
                 },
+                label: 'Label 2',
             },
             {
                 source: {
@@ -134,6 +136,7 @@ export default class EditorComponent implements OnInit {
                     connectorType: DfConnectionPoint.Input,
                     connectorId: 'node-4-input-1',
                 },
+                label: 'Label 3',
             },
             {
                 source: {
@@ -146,6 +149,7 @@ export default class EditorComponent implements OnInit {
                     connectorType: DfConnectionPoint.Input,
                     connectorId: 'node-4-input-1',
                 },
+                label: 'Label 4',
             },
         ],
     };

@@ -98,6 +98,7 @@ export interface DfDataNode extends DfDataInitialNode {
 export interface DfDataConnection {
     source: DfDataConnector;
     target: DfDataConnector;
+    label?: string;
 }
 
 export type DfId = string;

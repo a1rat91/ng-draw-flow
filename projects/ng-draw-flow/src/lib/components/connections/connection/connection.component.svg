@@ -39,4 +39,15 @@
     </defs>
     <path class="selectable-area" [attr.d]="path$ | async" (dfSelectableElement)="onSelectedChanged($event)" />
     <path class="main-path" [attr.d]="path$ | async" [class.df-selected]="selected" [attr.marker-end]="markerEnd" />
+
+    <text
+        *ngIf="connection.label"
+        class="label"
+        [attr.x]="(labelPosition$ | async)?.x"
+        [attr.y]="(labelPosition$ | async)?.y"
+        text-anchor="middle"
+        dominant-baseline="middle"
+    >
+        {{ connection.label }}
+    </text>
 </svg>

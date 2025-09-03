@@ -37,8 +37,11 @@ export class DraftConnectionComponent {
         const curvature = this.options.connection.curvature;
 
         switch (this.options.connection.type) {
-            case DfConnectionType.SmoothStep:
-                return createSmoothStepPath(sourcePoint, targetPoint, curvature);
+            case DfConnectionType.SmoothStep: {
+                const [path] = createSmoothStepPath(sourcePoint, targetPoint, curvature);
+
+                return path;
+            }
             case DfConnectionType.Bezier:
             default: {
                 const [path] = createBezierPath(sourcePoint, targetPoint, curvature);
